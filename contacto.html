@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Formulario de contacto para emprendedores interesados en InnovateStart"
+    />
+    <meta
+      name="keywords"
+      content="contacto, formulario, consultas, inscripciones, emprendimiento"
+    />
+    <meta name="author" content="InnovateStart Team" />
+    <meta property="og:title" content="InnovateStart - Contáctanos" />
+    <meta
+      property="og:description"
+      content="Completa el formulario para recibir asesoría personalizada"
+    />
+    <meta property="og:type" content="website" />
+    <title>InnovateStart | Contacto</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- ==================== HEADER ==================== -->
+    <div id="header-placeholder"></div>
+
+    <main>
+      <div class="container my-5 pt-5">
+        <div class="row">
+          <div class="col-lg-6 mx-auto">
+            <h1 class="section-title text-center mb-4">Contáctanos</h1>
+            <p class="text-center mb-4">
+              Completa el formulario y un asesor se comunicará contigo en menos
+              de 24 horas.
+            </p>
+
+            <!-- FORMULARIO CON VALIDACIÓN JS -->
+            <form id="contactForm" novalidate>
+              <!-- Campo NOMBRE (mínimo 3 caracteres) -->
+              <div class="mb-3">
+                <label for="nombre" class="form-label fw-bold"
+                  >Nombre completo *</label
+                >
+                <div class="input-group">
+                  <span class="input-group-text"
+                    ><i class="fas fa-user"></i
+                  ></span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="nombre"
+                    placeholder="Ej: Juan Pérez"
+                    required
+                  />
+                </div>
+                <div class="invalid-feedback" id="nombreError">
+                  El nombre debe tener al menos 3 caracteres.
+                </div>
+              </div>
+
+              <!-- Campo EMAIL (formato válido) -->
+              <div class="mb-3">
+                <label for="email" class="form-label fw-bold"
+                  >Correo electrónico *</label
+                >
+                <div class="input-group">
+                  <span class="input-group-text"
+                    ><i class="fas fa-envelope"></i
+                  ></span>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    placeholder="ejemplo@dominio.com"
+                    required
+                  />
+                </div>
+                <div class="invalid-feedback" id="emailError">
+                  Ingresa un correo electrónico válido (ej: nombre@dominio.com).
+                </div>
+              </div>
+
+              <!-- Campo SELECT (requisito: al menos un campo tipo select) -->
+              <div class="mb-3">
+                <label for="interes" class="form-label fw-bold"
+                  >¿Qué te interesa? *</label
+                >
+                <select class="form-select" id="interes" required>
+                  <option value="">Selecciona una opción</option>
+                  <option value="mentoria">Mentorías personalizadas</option>
+                  <option value="curso">Cursos y talleres</option>
+                  <option value="financiamiento">Financiamiento</option>
+                  <option value="networking">Eventos de networking</option>
+                  <option value="asesoria">Asesoría legal</option>
+                </select>
+                <div class="invalid-feedback" id="interesError">
+                  Por favor, selecciona una opción.
+                </div>
+              </div>
+
+              <!-- Campo MENSAJE (mínimo 20 caracteres) -->
+              <div class="mb-3">
+                <label for="mensaje" class="form-label fw-bold"
+                  >Mensaje *</label
+                >
+                <textarea
+                  class="form-control"
+                  id="mensaje"
+                  rows="4"
+                  placeholder="Cuéntanos sobre tu proyecto o consulta..."
+                  required
+                ></textarea>
+                <div class="invalid-feedback" id="mensajeError">
+                  El mensaje debe tener al menos 20 caracteres.
+                </div>
+                <small class="text-muted" id="contadorCaracteres"
+                  >0/20 caracteres mínimos</small
+                >
+              </div>
+
+              <!-- Campo CHECKBOX (requisito: obligatorio) -->
+              <div class="mb-3 form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="terminos"
+                  required
+                />
+                <label class="form-check-label" for="terminos">
+                  Acepto recibir información sobre eventos, cursos y promociones
+                  *
+                </label>
+                <div class="invalid-feedback" id="terminosError">
+                  Debes aceptar para continuar.
+                </div>
+              </div>
+
+              <!-- Botón de envío -->
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="fas fa-paper-plane me-2"></i>Enviar mensaje
+                </button>
+              </div>
+
+              <!-- Mensaje de resultado (sin alert) -->
+              <div id="formMessage" class="mt-4"></div>
+            </form>
+
+            <!-- INFORMACIÓN DE CONTACTO ADICIONAL -->
+            <div class="row mt-5 pt-3 text-center">
+              <div class="col-md-4">
+                <i class="fas fa-map-marker-alt fa-2x text-primary mb-2"></i>
+                <p>
+                  <strong>Oficina principal</strong><br />Av. Innovación 123,<br />Santiago,
+                  Chile
+                </p>
+              </div>
+              <div class="col-md-4">
+                <i class="fas fa-phone-alt fa-2x text-primary mb-2"></i>
+                <p>
+                  <strong>Teléfono</strong><br />+56 2 1234 5678<br />Lun a Vie
+                  9-18h
+                </p>
+              </div>
+              <div class="col-md-4">
+                <i class="fas fa-clock fa-2x text-primary mb-2"></i>
+                <p>
+                  <strong>Horario de atención</strong><br />Lunes a Viernes<br />9:00
+                  AM - 6:00 PM
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <div id="footer-placeholder"></div>
+
+    <script src="js/script.js"></script>
+    <script src="js/components.js"></script>
+  </body>
+</html>

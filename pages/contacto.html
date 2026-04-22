@@ -1,0 +1,88 @@
+<!-- PÁGINA DE CONTACTO - COMPONENTE -->
+<div class="container my-5 pt-4">
+  <div class="row">
+    <div class="col-lg-6 mx-auto">
+      <h1 class="section-title text-center mb-4">Contáctanos</h1>
+      <p class="text-center mb-4">
+        Completa el formulario y un asesor se comunicará contigo.
+      </p>
+
+      <form id="contactForm" novalidate>
+        <div class="mb-3">
+          <label for="nombre" class="form-label fw-bold"
+            >Nombre completo *</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="nombre"
+            placeholder="Ej: Juan Pérez"
+          />
+          <div class="invalid-feedback">
+            El nombre debe tener al menos 3 caracteres.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label fw-bold"
+            >Correo electrónico *</label
+          >
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            placeholder="ejemplo@dominio.com"
+          />
+          <div class="invalid-feedback">
+            Ingresa un correo electrónico válido.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="interes" class="form-label fw-bold"
+            >¿Qué te interesa? *</label
+          >
+          <select class="form-select" id="interes">
+            <option value="">Selecciona una opción</option>
+            <option value="mentoria">Mentorías personalizadas</option>
+            <option value="curso">Cursos y talleres</option>
+            <option value="financiamiento">Financiamiento</option>
+            <option value="networking">Eventos de networking</option>
+          </select>
+          <div class="invalid-feedback">Selecciona una opción.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="mensaje" class="form-label fw-bold">Mensaje *</label>
+          <textarea
+            class="form-control"
+            id="mensaje"
+            rows="4"
+            placeholder="Cuéntanos sobre tu proyecto..."
+          ></textarea>
+          <div class="invalid-feedback">
+            El mensaje debe tener al menos 20 caracteres.
+          </div>
+          <small class="text-muted" id="contadorCaracteres"
+            >0/20 caracteres mínimos</small
+          >
+        </div>
+
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="terminos" />
+          <label class="form-check-label" for="terminos"
+            >Acepto recibir información *</label
+          >
+          <div class="invalid-feedback">Debes aceptar para continuar.</div>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-primary btn-lg">
+            Enviar mensaje
+          </button>
+        </div>
+        <div id="formMessage" class="mt-4"></div>
+      </form>
+    </div>
+  </div>
+</div>

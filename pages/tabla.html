@@ -1,0 +1,90 @@
+<!-- PÁGINA DE TABLA - COMPONENTE -->
+<div class="container my-5 pt-4">
+  <h1 class="section-title text-center mb-3">Comparativa de planes</h1>
+  <p class="text-center mb-5">
+    Encuentra el plan perfecto para acelerar tu emprendimiento.
+  </p>
+
+  <div class="table-responsive shadow rounded">
+    <table class="table table-bordered table-hover align-middle mb-0">
+      <thead class="table-dark">
+        <tr class="text-center">
+          <th scope="col">Características</th>
+          <th scope="col"><i class="fas fa-seedling me-1"></i> Básico</th>
+          <th scope="col"><i class="fas fa-chart-line me-1"></i> Pro</th>
+          <th scope="col"><i class="fas fa-building me-1"></i> Empresa</th>
+          <th scope="col"><i class="fas fa-gem me-1"></i> Premium</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Precio mensual</th>
+          <td class="text-center text-success fw-bold">$0 USD</td>
+          <td class="text-center text-primary fw-bold">$49 USD</td>
+          <td class="text-center text-primary fw-bold">$199 USD</td>
+          <td class="text-center text-warning fw-bold">$499 USD</td>
+        </tr>
+        <tr>
+          <th scope="row">Mentorías</th>
+          <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+          <td class="text-center">1/mes</td>
+          <td class="text-center">4/mes</td>
+          <td class="text-center">Ilimitadas</td>
+        </tr>
+        <tr>
+          <th scope="row">Eventos networking</th>
+          <td class="text-center">2/año</td>
+          <td class="text-center">10/año</td>
+          <td class="text-center">Ilimitados</td>
+          <td class="text-center">VIP</td>
+        </tr>
+        <tr>
+          <th scope="row">Cursos</th>
+          <td class="text-center">3 básicos</td>
+          <td class="text-center">10 cursos</td>
+          <td class="text-center">Todos</td>
+          <td class="text-center">Todos + certificaciones</td>
+        </tr>
+        <tr>
+          <th scope="row">Asesoría legal</th>
+          <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+          <td class="text-center">1 consulta</td>
+          <td class="text-center">5 consultas</td>
+          <td class="text-center">Ilimitadas</td>
+        </tr>
+      </tbody>
+      <tfoot class="table-secondary">
+        <tr>
+          <th scope="row">Acción</th>
+          <td class="text-center">
+            <button
+              class="btn btn-sm btn-outline-success"
+              data-route="/contacto"
+            >
+              Registrarse
+            </button>
+          </td>
+          <td class="text-center">
+            <button class="btn btn-sm btn-primary" data-route="/contacto">
+              Contratar
+            </button>
+          </td>
+          <td class="text-center">
+            <button class="btn btn-sm btn-primary" data-route="/contacto">
+              Contratar
+            </button>
+          </td>
+          <td class="text-center">
+            <button class="btn btn-sm btn-warning" data-route="/contacto">
+              Contactar
+            </button>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <p class="text-muted mt-4 text-center">
+    <i class="fas fa-info-circle me-1"></i> *Planes anuales tienen 20% de
+    descuento.
+  </p>
+</div>

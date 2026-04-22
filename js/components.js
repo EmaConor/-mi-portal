@@ -1,5 +1,4 @@
 // ========== CARGA AUTOMÁTICA DE COMPONENTES ==========
-// Este script carga el header y footer en todas las páginas
 
 async function loadComponent(elementId, componentPath) {
   try {

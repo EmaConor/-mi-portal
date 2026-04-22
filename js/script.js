@@ -1,233 +1,242 @@
-// ========== VALIDACIÓN DEL FORMULARIO DE CONTACTO ==========
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("contactForm");
+// ========== ROUTER ==========
 
-  // Si no existe el formulario en esta página, salimos sin errores
+const routes = {
+  "/": "pages/home.html",
+  "/informacion": "pages/informacion.html",
+  "/galeria": "pages/galeria.html",
+  "/tabla": "pages/tabla.html",
+  "/contacto": "pages/contacto.html",
+};
+
+// Obtener la ruta actual desde el hash de la URL
+function getCurrentRoute() {
+  const hash = window.location.hash;
+  // Si no hay hash o es "#/", devolver "/"
+  if (!hash || hash === "#/" || hash === "#") {
+    return "/";
+  }
+  // Quitar el "#" del inicio
+  return hash.substring(1);
+}
+
+// Actualizar el hash sin causar recarga
+function setHash(route) {
+  window.location.hash = route;
+}
+
+// Función para cargar el contenido de la página actual
+async function loadContent(route) {
+  const contentDiv = document.getElementById("app-content");
+  if (!contentDiv) return;
+
+  // Mostrar loading
+  contentDiv.innerHTML = `
+        <div class="container text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-3">Cargando contenido...</p>
+        </div>
+    `;
+
+  try {
+    const pagePath = routes[route] || routes["/"];
+    const response = await fetch(pagePath);
+
+    if (!response.ok)
+      throw new Error(`Error cargando ${pagePath}: ${response.status}`);
+
+    const html = await response.text();
+    contentDiv.innerHTML = html;
+
+    // Actualizar el título de la página según la ruta
+    updatePageTitle(route);
+
+    // Marcar el enlace activo en la navegación
+    setActiveNavLink(route);
+
+    // Ejecutar scripts específicos de la página cargada
+    executePageScripts(route);
+
+    // Scroll al inicio
+    window.scrollTo(0, 0);
+  } catch (error) {
+    console.error("Error:", error);
+    contentDiv.innerHTML = `
+            <div class="container text-center py-5">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Error al cargar el contenido: ${error.message}<br>
+                    Verifica que los archivos en la carpeta "pages/" existan.
+                </div>
+            </div>
+        `;
+  }
+}
+
+// Actualizar el título de la página
+function updatePageTitle(route) {
+  const titles = {
+    "/": "InnovateStart | Inicio - Portal de Emprendimiento",
+    "/informacion": "InnovateStart | Información - Metodologías",
+    "/galeria": "InnovateStart | Galería - Eventos y talleres",
+    "/tabla": "InnovateStart | Planes y precios",
+    "/contacto": "InnovateStart | Contacto",
+  };
+  document.title = titles[route] || "InnovateStart";
+}
+
+// Marcar el enlace activo en el menú
+function setActiveNavLink(route) {
+  const navLinks = document.querySelectorAll(
+    ".navbar-nav .nav-link, footer a[data-route]",
+  );
+  navLinks.forEach((link) => {
+    const linkRoute = link.getAttribute("data-route");
+    if (linkRoute === route) {
+      link.classList.add("active");
+    } else {
+      link.classList.remove("active");
+    }
+  });
+}
+
+// Ejecutar scripts específicos después de cargar la página
+function executePageScripts(route) {
+  // Si es la página de contacto, inicializar la validación del formulario
+  if (route === "/contacto") {
+    setTimeout(() => {
+      if (typeof initContactForm === "function") {
+        initContactForm();
+      }
+    }, 100);
+  }
+}
+
+// Manejar la navegación (solo cambia el hash)
+function navigateTo(route) {
+  if (route !== getCurrentRoute()) {
+    setHash(route);
+  }
+}
+
+// Escuchar cambios en el hash (cuando cambia la URL)
+function handleHashChange() {
+  const route = getCurrentRoute();
+  loadContent(route);
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener("DOMContentLoaded", () => {
+  // Escuchar cambios en el hash
+  window.addEventListener("hashchange", handleHashChange);
+
+  // Cargar la ruta inicial (la que está en el hash o "/" por defecto)
+  const initialRoute = getCurrentRoute();
+  loadContent(initialRoute);
+
+  // Delegación de eventos para clics en enlaces con data-route
+  document.body.addEventListener("click", (e) => {
+    const link = e.target.closest("[data-route]");
+    if (link) {
+      e.preventDefault();
+      const route = link.getAttribute("data-route");
+      navigateTo(route);
+    }
+  });
+});
+
+
+
+// ========== VALIDACIÓN DEL FORMULARIO DE CONTACTO ==========
+function initContactForm() {
+  const form = document.getElementById("contactForm");
   if (!form) return;
 
-  // Elementos del formulario
   const nombre = document.getElementById("nombre");
   const email = document.getElementById("email");
   const mensaje = document.getElementById("mensaje");
   const interes = document.getElementById("interes");
   const terminos = document.getElementById("terminos");
+  const contador = document.getElementById("contadorCaracteres");
 
-  // Contador de caracteres para el mensaje
-  const contadorCaracteres = document.getElementById("contadorCaracteres");
-
-  // Función para actualizar contador de caracteres
   function actualizarContador() {
-    if (mensaje && contadorCaracteres) {
-      const longitud = mensaje.value.length;
-      contadorCaracteres.textContent = `${longitud}/20 caracteres mínimos`;
-      if (longitud >= 20) {
-        contadorCaracteres.classList.add("text-success");
-        contadorCaracteres.classList.remove("text-danger");
-      } else {
-        contadorCaracteres.classList.add("text-danger");
-        contadorCaracteres.classList.remove("text-success");
-      }
+    if (mensaje && contador) {
+      const len = mensaje.value.length;
+      contador.textContent = `${len}/20 caracteres mínimos`;
+      contador.classList.toggle("text-success", len >= 20);
+      contador.classList.toggle("text-danger", len < 20);
     }
   }
 
-  // Validación individual de cada campo
   function validarNombre() {
-    const valor = nombre.value.trim();
-    const esValido = valor.length >= 3;
-    if (!esValido) {
-      nombre.classList.add("is-invalid");
-    } else {
-      nombre.classList.remove("is-invalid");
-    }
-    return esValido;
+    const valido = nombre.value.trim().length >= 3;
+    nombre.classList.toggle("is-invalid", !valido);
+    return valido;
   }
 
   function validarEmail() {
-    const valor = email.value.trim();
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const esValido = regex.test(valor);
-    if (!esValido) {
-      email.classList.add("is-invalid");
-    } else {
-      email.classList.remove("is-invalid");
-    }
-    return esValido;
+    const valido = regex.test(email.value.trim());
+    email.classList.toggle("is-invalid", !valido);
+    return valido;
   }
 
   function validarMensaje() {
-    const valor = mensaje.value.trim();
-    const esValido = valor.length >= 20;
-    if (!esValido) {
-      mensaje.classList.add("is-invalid");
-    } else {
-      mensaje.classList.remove("is-invalid");
-    }
+    const valido = mensaje.value.trim().length >= 20;
+    mensaje.classList.toggle("is-invalid", !valido);
     actualizarContador();
-    return esValido;
+    return valido;
   }
 
   function validarSelect() {
-    const valor = interes.value;
-    const esValido = valor !== "";
-    if (!esValido) {
-      interes.classList.add("is-invalid");
-    } else {
-      interes.classList.remove("is-invalid");
-    }
-    return esValido;
+    const valido = interes.value !== "";
+    interes.classList.toggle("is-invalid", !valido);
+    return valido;
   }
 
   function validarCheckbox() {
-    const esValido = terminos.checked;
-    if (!esValido) {
-      terminos.classList.add("is-invalid");
-    } else {
-      terminos.classList.remove("is-invalid");
-    }
-    return esValido;
+    const valido = terminos.checked;
+    terminos.classList.toggle("is-invalid", !valido);
+    return valido;
   }
 
-  // Eventos en tiempo real para cada campo
-  if (nombre) {
-    nombre.addEventListener("input", validarNombre);
-    nombre.addEventListener("blur", validarNombre);
-  }
+  // Eventos en tiempo real
+  nombre?.addEventListener("input", validarNombre);
+  email?.addEventListener("input", validarEmail);
+  mensaje?.addEventListener("input", validarMensaje);
+  interes?.addEventListener("change", validarSelect);
+  terminos?.addEventListener("change", validarCheckbox);
 
-  if (email) {
-    email.addEventListener("input", validarEmail);
-    email.addEventListener("blur", validarEmail);
-  }
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-  if (mensaje) {
-    mensaje.addEventListener("input", validarMensaje);
-    mensaje.addEventListener("blur", validarMensaje);
-    mensaje.addEventListener("keyup", actualizarContador);
-  }
+    const valido =
+      validarNombre() &
+      validarEmail() &
+      validarMensaje() &
+      validarSelect() &
+      validarCheckbox();
+    const msgDiv = document.getElementById("formMessage");
 
-  if (interes) {
-    interes.addEventListener("change", validarSelect);
-  }
-
-  if (terminos) {
-    terminos.addEventListener("change", validarCheckbox);
-  }
-
-  // Envío del formulario (sin recargar la página, sin alert())
-  form.addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    // Validar todos los campos
-    const nombreValido = validarNombre();
-    const emailValido = validarEmail();
-    const mensajeValido = validarMensaje();
-    const selectValido = validarSelect();
-    const checkboxValido = validarCheckbox();
-
-    const formularioValido =
-      nombreValido &&
-      emailValido &&
-      mensajeValido &&
-      selectValido &&
-      checkboxValido;
-
-    const messageDiv = document.getElementById("formMessage");
-
-    if (formularioValido) {
-      // Mostrar mensaje de éxito
-      messageDiv.innerHTML = `
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle me-2"></i>
-                    <strong>¡Mensaje enviado con éxito!</strong><br>
-                    Gracias por contactarte con InnovateStart. Un asesor se comunicará contigo en las próximas 24 horas.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-                </div>
-            `;
-
-      // Limpiar el formulario
+    if (valido) {
+      msgDiv.innerHTML =
+        '<div class="alert alert-success">✅ Mensaje enviado con éxito. Un asesor te contactará pronto.</div>';
       form.reset();
-
-      // Limpiar clases de validación
       document
         .querySelectorAll(".is-invalid")
         .forEach((el) => el.classList.remove("is-invalid"));
-
-      // Reiniciar contador
-      if (contadorCaracteres) {
-        contadorCaracteres.textContent = "0/20 caracteres mínimos";
-      }
-
-      // Scroll suave al mensaje
-      messageDiv.scrollIntoView({ behavior: "smooth", block: "nearest" });
-
-      // Opcional: limpiar el mensaje después de 5 segundos
-      setTimeout(() => {
-        if (messageDiv.children.length > 0) {
-          messageDiv.innerHTML = "";
-        }
-      }, 5000);
+      if (contador) contador.textContent = "0/20 caracteres mínimos";
     } else {
-      // Mostrar mensaje de error
-      messageDiv.innerHTML = `
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Por favor, revisa los siguientes campos:</strong><br>
-                    ${!nombreValido ? "• El nombre debe tener al menos 3 caracteres.<br>" : ""}
-                    ${!emailValido ? "• Ingresa un correo electrónico válido.<br>" : ""}
-                    ${!mensajeValido ? "• El mensaje debe tener al menos 20 caracteres.<br>" : ""}
-                    ${!selectValido ? "• Selecciona una opción de interés.<br>" : ""}
-                    ${!checkboxValido ? "• Debes aceptar los términos.<br>" : ""}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-                </div>
-            `;
-
-      // Scroll al primer error
-      const primerError = document.querySelector(".is-invalid");
-      if (primerError) {
-        primerError.scrollIntoView({ behavior: "smooth", block: "center" });
-        primerError.focus();
-      }
+      msgDiv.innerHTML =
+        '<div class="alert alert-danger">❌ Revisa los campos en rojo.</div>';
     }
   });
-});
+}
 
-// ========== FUNCIONALIDAD ADICIONAL: Menú activo según la página ==========
-document.addEventListener("DOMContentLoaded", function () {
-  const currentPage = window.location.pathname.split("/").pop() || "index.html";
-  const navLinks = document.querySelectorAll(".navbar-nav .nav-link");
-
-  navLinks.forEach((link) => {
-    const href = link.getAttribute("href");
-    if (href === currentPage) {
-      link.classList.add("active");
-    } else if (currentPage === "" && href === "index.html") {
-      link.classList.add("active");
-    }
-  });
-});
-
-// ========== SMOOTH SCROLL para enlaces internos ==========
-document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-  anchor.addEventListener("click", function (e) {
-    const target = document.querySelector(this.getAttribute("href"));
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: "smooth" });
-    }
-  });
-});
-
-// ========== Mostrar año actual en el footer automáticamente ==========
-document.addEventListener("DOMContentLoaded", function () {
-  const yearSpan = document.querySelector(".footer-year");
-  if (yearSpan) {
-    yearSpan.textContent = new Date().getFullYear();
-  }
-});
-
-// ========== Tooltips de Bootstrap (opcional) ==========
-const tooltipTriggerList = [].slice.call(
-  document.querySelectorAll('[data-bs-toggle="tooltip"]'),
-);
-tooltipTriggerList.map(function (tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl);
-});
+// Inicializar cuando el DOM esté listo
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initContactForm);
+} else {
+  initContactForm();
+}
